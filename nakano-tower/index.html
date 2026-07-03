@@ -159,24 +159,10 @@ footer strong{color:var(--ink);}
 
 <div class="lightbox" id="lb"><img id="lbImg" src="" alt=""><div class="cap" id="lbCap"></div></div>
 
-<script src="imgdata.js"></script>
+<script src="data.js"></script>
 <script>
 const GAS_URL=(typeof CONFIG!=="undefined"&&CONFIG.gasUrl)||"";
 const CID=new URLSearchParams(location.search).get("c")||"guest";
-const units=[
- {b:"breeze",bn:"ブリーズ",room:"411",floor:4,rent:298000,kanri:0,plan:"2LDK",area:57.00,pet:false,move:"要確認",note:"退去時清掃費 75,240円"},
- {b:"breeze",bn:"ブリーズ",room:"512",floor:5,rent:294000,kanri:20000,plan:"2LDK+2WIC",area:56.99,pet:true,move:"5月上旬（案内4/26〜）",note:"ペット飼育可（敷金1ヶ月積増）・ピアノ相談可・床暖房/食洗機"},
- {b:"breeze",bn:"ブリーズ",room:"609",floor:6,rent:300000,kanri:20000,plan:"2LDK+SIC",area:55.84,pet:false,move:"5月下旬",note:"定借2年（再契約相談可）"},
- {b:"breeze",bn:"ブリーズ",room:"612",floor:6,rent:295000,kanri:20000,plan:"2LDK+2WIC",area:56.99,pet:true,move:"5月上旬（案内4/26〜）",note:"ペット飼育可（敷金1ヶ月積増）・ピアノ相談可・床暖房/食洗機"},
- {b:"breeze",bn:"ブリーズ",room:"709",floor:7,rent:301000,kanri:20000,plan:"2LDK+SIC",area:55.84,pet:false,move:"5月下旬",note:"定借2年（再契約相談可）"},
- {b:"breeze",bn:"ブリーズ",room:"909",floor:9,rent:298000,kanri:0,plan:"2LDK",area:55.84,pet:false,move:"要確認",note:"退去時清掃費 73,708円"},
- {b:"airs",bn:"エアーズ",room:"619",floor:6,rent:385000,kanri:20000,plan:"3LD・K+SIC",area:66.60,pet:false,move:"即入居可（案内5/9〜）",note:"定借2年（再契約相談可）・床暖房/食洗機"},
- {b:"airs",bn:"エアーズ",room:"1420",floor:14,rent:336000,kanri:0,plan:"2LDK",area:54.80,pet:false,move:"要確認",note:"退去時清掃費 72,336円"},
- {b:"airs",bn:"エアーズ",room:"1819",floor:18,rent:380000,kanri:20000,plan:"3LDK",area:66.29,pet:false,move:"要確認",note:"退去時清掃費 87,502円"},
- {b:"airs",bn:"エアーズ",room:"1821",floor:18,rent:405000,kanri:20000,plan:"3LDK",area:70.75,pet:false,move:"要確認",note:"最大面積70.75㎡・退去時清掃費 93,390円"},
- {b:"airs",bn:"エアーズ",room:"1917",floor:19,rent:340000,kanri:0,plan:"2LDK",area:58.25,pet:false,move:"2026年7月下旬（居住中）",note:"南向き・分譲タイプ・床暖房/ディスポーザー"},
- {b:"airs",bn:"エアーズ",room:"2215",floor:22,rent:350000,kanri:0,plan:"2LDK",area:54.92,pet:false,move:"要確認",note:"22階の眺望・退去時清掃費 72,494円"},
-];
 units.forEach(u=>{u.total=u.rent+u.kanri;u.tanka=Math.round(u.total/u.area);u.plan2=u.plan.includes("3")?"3LDK":"2LDK";});
 
 let fB="all",fP="all",fPet=false,sort="rent-asc";

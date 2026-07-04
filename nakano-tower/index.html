@@ -62,6 +62,7 @@ select{border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size
 .int-btn.sent{background:#e6f4ec;color:#0e7a4a;cursor:default;}
 .int-btn:disabled{opacity:.7;}
 .cmp-btn{margin:0 16px 14px;padding:9px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:13px;cursor:pointer;color:var(--sub);transition:.15s;}
+.detail-btn{margin:0;flex:0 0 auto;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:13px;cursor:pointer;color:var(--sub);transition:.15s;}
 .card.selected .cmp-btn{background:var(--accent);border-color:var(--accent);color:#fff;}
 .cmp-bar{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#fff;padding:12px 16px;display:none;z-index:50;}
 .cmp-bar.show{display:block;}
@@ -211,6 +212,7 @@ function render(){
        <span class="badge">${u.note.split("・")[0]}</span>
      </div>
      <div class="actions">
+       <button class="detail-btn" onclick="openLb('plan_${u.room}','${u.bn} ${u.room}号室 間取り図')">🔍 詳細</button>
        <button class="cmp-btn" onclick="toggle('${u.room}')">${sel.has(u.room)?"✓ 比較済":"＋ 比較"}</button>
        <button class="int-btn ${sent(u.room)?'sent':''}" id="int-${u.room}" onclick="sendInterest('${u.room}')">${sent(u.room)?"✓ 興味あり送信済み":"♥ この物件に興味あり"}</button>
      </div>

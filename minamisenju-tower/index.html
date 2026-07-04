@@ -1,0 +1,282 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>お客様専用物件情報</title>
+<style>
+:root{
+  --ink:#1c2430; --sub:#5b6674; --line:#dfe4ea; --bg:#f5f7f9; --card:#fff;
+  --breeze:#2f6f8f; --airs:#8a6d3b; --accent:#0e5a4a; --ok:#0e7a4a;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px 80px;}
+header{background:linear-gradient(135deg,#16222e 0%,#243a4d 100%);color:#fff;padding:40px 16px 32px;}
+header .wrap{padding-bottom:0;}
+.eyebrow{font-size:12px;letter-spacing:.25em;color:#9fb6c6;margin-bottom:8px;}
+h1{font-size:clamp(22px,4vw,32px);font-weight:700;letter-spacing:.04em;}
+.lead{margin-top:10px;font-size:14px;color:#c8d4dd;max-width:640px;}
+.building-key{display:flex;gap:16px;margin-top:18px;flex-wrap:wrap;font-size:13px;}
+.building-key span{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);padding:6px 12px;border-radius:999px;}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;}
+.dot.b{background:var(--breeze);} .dot.a{background:var(--airs);}
+.controls{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 16px;align-items:center;}
+.controls .group{display:flex;gap:6px;flex-wrap:wrap;}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px;font-size:13px;cursor:pointer;color:var(--sub);transition:.15s;}
+.chip.active{background:var(--ink);border-color:var(--ink);color:#fff;}
+select{border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:13px;background:#fff;color:var(--ink);}
+.count{font-size:13px;color:var(--sub);margin-left:auto;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:.15s;position:relative;}
+.card.selected{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset,0 4px 14px rgba(14,90,74,.12);}
+.card-top{padding:14px 16px 10px;border-top:4px solid;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+.card.breeze .card-top{border-color:var(--breeze);} .card.airs .card-top{border-color:var(--airs);}
+.bname{font-size:11px;letter-spacing:.08em;color:var(--sub);}
+.room{font-size:20px;font-weight:700;}
+.floortag{font-size:11px;color:var(--sub);}
+/* 画像エリア */
+.imgarea{position:relative;background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+.imgarea .frame{width:100%;height:230px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:zoom-in;background:#fff;}
+.imgarea img{max-width:100%;max-height:100%;object-fit:contain;}
+.imgarea .frame.ext{background:#e8edf1;}
+.imgarea .frame.ext img{width:100%;height:100%;object-fit:cover;}
+.imgtabs{position:absolute;top:8px;left:8px;display:flex;gap:4px;z-index:2;}
+.imgtabs button{font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid var(--line);background:rgba(255,255,255,.92);color:var(--sub);cursor:pointer;font-weight:600;}
+.imgtabs button.on{background:var(--ink);border-color:var(--ink);color:#fff;}
+.zoomhint{position:absolute;bottom:6px;right:8px;font-size:10px;color:#8a94a0;background:rgba(255,255,255,.85);padding:2px 7px;border-radius:5px;pointer-events:none;}
+.pricebox{padding:10px 16px 8px;}
+.price{font-size:26px;font-weight:700;}
+.price small{font-size:13px;font-weight:500;color:var(--sub);}
+.kanri{font-size:12px;color:var(--sub);}
+.specs{padding:10px 16px;border-top:1px dashed var(--line);display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:13px;}
+.specs dt{color:var(--sub);font-size:11px;} .specs dd{font-weight:600;}
+.badges{padding:8px 16px 12px;display:flex;gap:6px;flex-wrap:wrap;}
+.badge{font-size:11px;padding:3px 9px;border-radius:6px;background:#eef2f5;color:var(--sub);}
+.badge.pet{background:#e6f4ec;color:var(--ok);font-weight:600;}
+.badge.now{background:#fdf1e3;color:#a3671c;font-weight:600;}
+.actions{display:flex;gap:8px;margin:0 16px 14px;}
+.actions .cmp-btn{margin:0;flex:0 0 auto;}
+.int-btn{flex:1;padding:9px;border:none;border-radius:8px;background:#c94f5e;color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:.15s;}
+.int-btn.sent{background:#e6f4ec;color:#0e7a4a;cursor:default;}
+.int-btn:disabled{opacity:.7;}
+.cmp-btn{margin:0 16px 14px;padding:9px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:13px;cursor:pointer;color:var(--sub);transition:.15s;}
+.card.selected .cmp-btn{background:var(--accent);border-color:var(--accent);color:#fff;}
+.cmp-bar{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#fff;padding:12px 16px;display:none;z-index:50;}
+.cmp-bar.show{display:block;}
+.cmp-bar .inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.cmp-bar button{background:var(--accent);border:none;color:#fff;padding:10px 22px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;}
+.cmp-bar .clear{background:transparent;border:1px solid rgba(255,255,255,.4);font-weight:400;}
+.modal{position:fixed;inset:0;background:rgba(20,28,36,.6);display:none;z-index:100;overflow:auto;padding:24px 12px;}
+.modal.show{display:block;}
+.modal-box{background:#fff;border-radius:14px;max-width:1060px;margin:0 auto;padding:20px;}
+.modal-box h2{font-size:18px;margin-bottom:4px;}
+.modal-box .note{font-size:12px;color:var(--sub);margin-bottom:14px;}
+.close-x{float:right;border:none;background:#eef2f5;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px;}
+.tbl-scroll{overflow-x:auto;}
+table{border-collapse:collapse;width:100%;font-size:13px;}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;white-space:nowrap;}
+thead th{background:#f0f3f6;font-size:12px;color:var(--sub);}
+td.head{background:#fafbfc;font-weight:600;color:var(--sub);font-size:12px;}
+td .rm{font-weight:700;font-size:15px;} td .bn{font-size:11px;color:var(--sub);}
+td img.cplan{width:170px;height:150px;object-fit:contain;background:#fff;cursor:zoom-in;display:block;}
+.best{background:#e9f6ef;font-weight:700;}
+/* ライトボックス */
+.lightbox{position:fixed;inset:0;background:rgba(12,17,22,.88);display:none;z-index:200;align-items:center;justify-content:center;padding:20px;cursor:zoom-out;}
+.lightbox.show{display:flex;}
+.lightbox img{max-width:96vw;max-height:90vh;object-fit:contain;background:#fff;border-radius:8px;}
+.lightbox .cap{position:absolute;bottom:16px;left:0;right:0;text-align:center;color:#fff;font-size:14px;}
+footer{margin-top:48px;font-size:12px;color:var(--sub);border-top:1px solid var(--line);padding-top:16px;}
+footer strong{color:var(--ink);}
+@media(max-width:640px){.price{font-size:22px;}.imgarea .frame{height:200px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">FOR YOUR EYES ONLY</div>
+    <h1>お客様専用物件情報<br>募集住戸 比較一覧（全8戸）</h1>
+    <p class="lead">南千住駅徒歩5分・2008年築のタワーレジデンス。現在ご紹介可能な8戸を、間取り図・外観写真つきで比較いただけます。</p>
+    <div class="building-key">
+      <span><i class="dot b"></i>東京都荒川区南千住4丁目7-3（東京メトロ日比谷線 南千住駅 徒歩5分）</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="controls">
+    <div class="group" id="fPlan">
+      <button class="chip active" data-v="all">全間取り</button>
+      <button class="chip" data-v="1LDK">1LDK</button>
+      <button class="chip" data-v="1SLDK">1SLDK</button>
+      <button class="chip" data-v="2LDK">2LDK</button>
+    </div>
+    <div class="group" id="fPet">
+      <button class="chip" data-v="pet">ペット可のみ</button>
+    </div>
+    <select id="sortSel">
+      <option value="rent-asc">賃料が安い順</option>
+      <option value="rent-desc">賃料が高い順</option>
+      <option value="area-desc">広い順</option>
+      <option value="floor-desc">高層階順</option>
+      <option value="tanka-asc">㎡単価が安い順</option>
+    </select>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <footer>
+    <strong>共通条件（各戸共通の目安）：</strong>礼金・敷金・保証金なし・更新料なし・全戸定期借家（3年）。<br>
+    ※本ページは各物件資料の抜粋です。現況と異なる場合は現況が優先されます。詳細はお問い合わせください。<br><br>
+    <strong>Savanna japan株式会社（サバンナホーム）</strong>　TEL: 03-6424-5902　東京都文京区湯島2-23-8 ルーフお茶ノ水ヒルズ00A
+  </footer>
+</div>
+
+<div class="cmp-bar" id="cmpBar">
+  <div class="inner">
+    <span id="cmpLabel">0戸選択中</span>
+    <button id="cmpOpen">選んだ住戸を並べて比較</button>
+    <button class="clear" id="cmpClear">選択解除</button>
+  </div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <button class="close-x" id="modalClose">閉じる ✕</button>
+    <h2>選択住戸の比較</h2>
+    <p class="note">緑色のセルは比較対象の中で最も有利な項目です。間取り図はタップで拡大できます。</p>
+    <div class="tbl-scroll" id="cmpTable"></div>
+  </div>
+</div>
+
+<div class="lightbox" id="lb"><img id="lbImg" src="" alt=""><div class="cap" id="lbCap"></div></div>
+
+<script src="data.js"></script>
+<script>
+const GAS_URL=(typeof CONFIG!=="undefined"&&CONFIG.gasUrl)||"";
+const CID=new URLSearchParams(location.search).get("c")||"guest";
+units.forEach(u=>{u.total=u.rent+u.kanri;u.tanka=Math.round(u.total/u.area);u.plan2=u.plan;});
+
+let fB="all",fP="all",fPet=false,sort="rent-asc";
+const sel=new Set();
+const viewMode={}; // room -> 'plan'|'ext'
+const yen=n=>n.toLocaleString("ja-JP");
+const src=k=>"data:image/jpeg;base64,"+IMGS[k];
+
+function render(){
+  let list=units.filter(u=>(fB==="all"||u.b===fB)&&(fP==="all"||u.plan2===fP)&&(!fPet||u.pet));
+  const s={"rent-asc":(a,b)=>a.total-b.total,"rent-desc":(a,b)=>b.total-a.total,"area-desc":(a,b)=>b.area-a.area,"floor-desc":(a,b)=>b.floor-a.floor,"tanka-asc":(a,b)=>a.tanka-b.tanka}[sort];
+  list.sort(s);
+  document.getElementById("count").textContent=`${list.length}戸表示`;
+  document.getElementById("grid").innerHTML=list.map(u=>{
+    const mode=viewMode[u.room]||"plan";
+    const key=(mode==="plan"?"plan_":"ext_")+u.room;
+    return `
+   <div class="card ${u.b} ${sel.has(u.room)?"selected":""}">
+     <div class="card-top">
+       <div><div class="bname">${u.bn}棟</div><div class="room">${u.room} 号室</div></div>
+       <div class="floortag">${u.floor}階</div>
+     </div>
+     <div class="imgarea">
+       <div class="imgtabs">
+         <button class="${mode==='plan'?'on':''}" onclick="setMode('${u.room}','plan')">間取り</button>
+         <button class="${mode==='ext'?'on':''}" onclick="setMode('${u.room}','ext')">外観</button>
+       </div>
+       <div class="frame ${mode==='ext'?'ext':''}" onclick="openLb('${key}','${u.bn} ${u.room}号室 ${mode==='plan'?'間取り図':'建物外観'}')">
+         <img src="${src(key)}" alt="${u.room} ${mode}" loading="lazy">
+       </div>
+       <div class="zoomhint">タップで拡大</div>
+     </div>
+     <div class="pricebox">
+       <div class="price">${yen(u.rent)}<small> 円/月</small></div>
+       <div class="kanri">管理費 ${u.kanri?yen(u.kanri)+"円":"込み・なし"}　<b>合計 ${yen(u.total)}円</b></div>
+     </div>
+     <dl class="specs">
+       <div><dt>間取り</dt><dd>${u.plan}</dd></div>
+       <div><dt>専有面積</dt><dd>${u.area.toFixed(2)}㎡</dd></div>
+       <div><dt>入居時期</dt><dd>${u.move}</dd></div>
+       <div><dt>㎡単価</dt><dd>${yen(u.tanka)}円</dd></div>
+     </dl>
+     <div class="badges">
+       ${u.pet?'<span class="badge pet">ペット可</span>':''}
+       ${u.move.includes("即")?'<span class="badge now">即入居可</span>':''}
+       <span class="badge">${u.note.split("・")[0]}</span>
+     </div>
+     <div class="actions">
+       <button class="cmp-btn" onclick="toggle('${u.room}')">${sel.has(u.room)?"✓ 比較済":"＋ 比較"}</button>
+       <button class="int-btn ${sent(u.room)?'sent':''}" id="int-${u.room}" onclick="sendInterest('${u.room}')">${sent(u.room)?"✓ 興味あり送信済み":"♥ この物件に興味あり"}</button>
+     </div>
+   </div>`;}).join("");
+  const bar=document.getElementById("cmpBar");
+  bar.classList.toggle("show",sel.size>0);
+  document.getElementById("cmpLabel").textContent=`${sel.size}戸選択中`;
+}
+function setMode(r,m){viewMode[r]=m;render();}
+function toggle(r){sel.has(r)?sel.delete(r):sel.add(r);render();}
+function sent(r){try{return localStorage.getItem("int_"+CID+"_"+r)==="1";}catch(e){return false;}}
+async function sendInterest(room){
+  if(sent(room))return;
+  if(!GAS_URL){alert("通知先が未設定です（data.jsのCONFIG.gasUrlを設定してください）");return;}
+  const u=units.find(x=>x.room===room);
+  const btn=document.getElementById("int-"+room);
+  btn.disabled=true;btn.textContent="送信中…";
+  try{
+    const q=new URLSearchParams({action:"interest",c:CID,building:u.bn,room:u.room,rent:u.total,plan:u.plan,page:"nakano-tower"});
+    await fetch(GAS_URL+"?"+q.toString());
+    try{localStorage.setItem("int_"+CID+"_"+room,"1");}catch(e){}
+    btn.className="int-btn sent";btn.textContent="✓ 興味あり送信済み";btn.disabled=false;
+  }catch(e){
+    btn.disabled=false;btn.textContent="♥ この物件に興味あり（再試行）";
+  }
+  render();
+}
+function openLb(key,cap){
+  document.getElementById("lbImg").src=src(key);
+  document.getElementById("lbCap").textContent=cap;
+  document.getElementById("lb").classList.add("show");
+}
+document.getElementById("lb").onclick=()=>document.getElementById("lb").classList.remove("show");
+
+document.querySelectorAll("#fBuilding .chip").forEach(c=>c.onclick=()=>{document.querySelectorAll("#fBuilding .chip").forEach(x=>x.classList.remove("active"));c.classList.add("active");fB=c.dataset.v;render();});
+document.querySelectorAll("#fPlan .chip").forEach(c=>c.onclick=()=>{document.querySelectorAll("#fPlan .chip").forEach(x=>x.classList.remove("active"));c.classList.add("active");fP=c.dataset.v;render();});
+document.querySelector("#fPet .chip").onclick=e=>{fPet=!fPet;e.target.classList.toggle("active",fPet);render();};
+document.getElementById("sortSel").onchange=e=>{sort=e.target.value;render();};
+document.getElementById("cmpClear").onclick=()=>{sel.clear();render();};
+
+document.getElementById("cmpOpen").onclick=()=>{
+  const list=units.filter(u=>sel.has(u.room));
+  if(!list.length)return;
+  const minTotal=Math.min(...list.map(u=>u.total));
+  const maxArea=Math.max(...list.map(u=>u.area));
+  const minTanka=Math.min(...list.map(u=>u.tanka));
+  const maxFloor=Math.max(...list.map(u=>u.floor));
+  const rows=[
+    ["間取り図",u=>`<img class="cplan" src="${src('plan_'+u.room)}" onclick="openLb('plan_${u.room}','${u.bn} ${u.room}号室 間取り図')">`,()=>false],
+    ["賃料＋管理費",u=>yen(u.total)+"円/月",u=>u.total===minTotal],
+    ["（内訳）賃料",u=>yen(u.rent)+"円",()=>false],
+    ["管理費",u=>u.kanri?yen(u.kanri)+"円":"なし",()=>false],
+    ["間取り",u=>u.plan,()=>false],
+    ["専有面積",u=>u.area.toFixed(2)+"㎡",u=>u.area===maxArea],
+    ["㎡単価",u=>yen(u.tanka)+"円/㎡",u=>u.tanka===minTanka],
+    ["所在階",u=>u.floor+"階",u=>u.floor===maxFloor],
+    ["入居時期",u=>u.move,()=>false],
+    ["ペット",u=>u.pet?"◯ 相談可":"不可",u=>u.pet],
+    ["敷金/礼金",u=>u.pet?"1ヶ月(＋積増1)/1ヶ月":"1ヶ月/1ヶ月",()=>false],
+    ["備考",u=>u.note,()=>false],
+  ];
+  document.getElementById("cmpTable").innerHTML=`<table>
+    <thead><tr><th></th>${list.map(u=>`<th><span class="rm">${u.room}</span><br><span class="bn">${u.bn}棟・${u.floor}階</span></th>`).join("")}</tr></thead>
+    <tbody>${rows.map(([label,fn,best])=>`<tr><td class="head">${label}</td>${list.map(u=>`<td class="${best(u)?'best':''}">${fn(u)}</td>`).join("")}</tr>`).join("")}</tbody>
+  </table>`;
+  document.getElementById("modal").classList.add("show");
+};
+document.getElementById("modalClose").onclick=()=>document.getElementById("modal").classList.remove("show");
+document.getElementById("modal").onclick=e=>{if(e.target.id==="modal")e.target.classList.remove("show");};
+
+render();
+</script>
+</body>
+</html>

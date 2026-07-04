@@ -1,5 +1,5 @@
 // ===== 設定（GASデプロイ後にgasUrlを貼る） =====
-const CONFIG={gasUrl:""};
+const CONFIG={gasUrl:"https://script.google.com/macros/s/AKfycbz83vj7zvFAnCSe-eaM9RNtUlyRssLrky6YTl7Dj4pDSkcstNVyX8Qtd2NuNkiEM88/exec"};
 
 // ===== 物件データ（図面追加時はこのファイルだけ更新） =====
 const units=[

@@ -46,6 +46,9 @@ select{border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size
 .imgtabs button{font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid var(--line);background:rgba(255,255,255,.92);color:var(--sub);cursor:pointer;font-weight:600;}
 .imgtabs button.on{background:var(--ink);border-color:var(--ink);color:#fff;}
 .zoomhint{position:absolute;bottom:6px;right:8px;font-size:10px;color:#8a94a0;background:rgba(255,255,255,.85);padding:2px 7px;border-radius:5px;pointer-events:none;}
+.galnav{position:absolute;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:50%;border:none;background:rgba(20,28,36,.5);color:#fff;font-size:15px;cursor:pointer;z-index:3;}
+.galnav.prev{left:8px;} .galnav.next{right:8px;}
+.galcount{position:absolute;bottom:6px;left:8px;font-size:10px;color:#fff;background:rgba(20,28,36,.6);padding:2px 8px;border-radius:5px;pointer-events:none;}
 .pricebox{padding:10px 16px 8px;}
 .price{font-size:26px;font-weight:700;}
 .price small{font-size:13px;font-weight:500;color:var(--sub);}
@@ -173,9 +176,16 @@ units.forEach(u=>{u.total=u.rent+u.kanri;u.tanka=Math.round(u.total/u.area);u.pl
 
 let fB="all",fP="all",fPet=false,sort="rent-asc";
 const sel=new Set();
-const viewMode={}; // room -> 'plan'|'ext'
+const viewMode={}; // key -> 'plan'|'ext'|'interior'
+const interiorIdx={}; // key -> index into INTERIOR[key]
 const yen=n=>n.toLocaleString("ja-JP");
 const src=k=>"data:image/jpeg;base64,"+IMGS[k];
+const srcInterior=(key,idx)=>"data:image/jpeg;base64,"+((INTERIOR[key]||[])[idx]||"");
+function galStep(key,d){
+  const len=(INTERIOR[key]||[]).length||1;
+  interiorIdx[key]=((interiorIdx[key]||0)+d+len)%len;
+  render();
+}
 
 function render(){
   let list=units.filter(u=>(fB==="all"||u.b===fB)&&(fP==="all"||u.plan2===fP)&&(!fPet||u.pet));
@@ -185,6 +195,10 @@ function render(){
   document.getElementById("grid").innerHTML=list.map(u=>{
     const mode=viewMode[u.key]||"plan";
     const key=(mode==="plan"?"plan_":"ext_")+u.key;
+    const gallery=INTERIOR[u.key]||[];
+    const idx=((interiorIdx[u.key]||0)%Math.max(gallery.length,1)+gallery.length)%Math.max(gallery.length,1);
+    const frameLabel=mode==="plan"?"間取り図":mode==="ext"?"建物外観":"室内写真";
+    const frameSrc=mode==="interior"?srcInterior(u.key,idx):src(key);
     return `
    <div class="card ${u.b} ${sel.has(u.key)?"selected":""}">
      <div class="card-top">
@@ -195,9 +209,11 @@ function render(){
        <div class="imgtabs">
          <button class="${mode==='plan'?'on':''}" onclick="setMode('${u.key}','plan')">間取り</button>
          <button class="${mode==='ext'?'on':''}" onclick="setMode('${u.key}','ext')">外観</button>
+         ${gallery.length?`<button class="${mode==='interior'?'on':''}" onclick="setMode('${u.key}','interior')">室内写真</button>`:''}
        </div>
-       <div class="frame ${mode==='ext'?'ext':''}" onclick="openLb('${key}','${u.bn} ${u.room}号室 ${mode==='plan'?'間取り図':'建物外観'}')">
-         <img src="${src(key)}" alt="${u.room} ${mode}" loading="lazy">
+       <div class="frame ${mode==='ext'?'ext':''}" onclick="openLb('${mode==='interior'?'':key}','${u.bn} ${u.room}号室 ${frameLabel}',${mode==='interior'?`'${u.key}',${idx}`:'null,0'})">
+         <img src="${frameSrc}" alt="${u.room} ${mode}" loading="lazy">
+         ${mode==='interior'&&gallery.length>1?`<button class="galnav prev" onclick="event.stopPropagation();galStep('${u.key}',-1)">‹</button><button class="galnav next" onclick="event.stopPropagation();galStep('${u.key}',1)">›</button><span class="galcount">${idx+1}/${gallery.length}</span>`:''}
        </div>
        <div class="zoomhint">タップで拡大</div>
      </div>
@@ -210,6 +226,8 @@ function render(){
        <div><dt>専有面積</dt><dd>${u.area.toFixed(2)}㎡</dd></div>
        <div><dt>入居時期</dt><dd>${u.move}</dd></div>
        <div><dt>㎡単価</dt><dd>${yen(u.tanka)}円</dd></div>
+       <div><dt>現況</dt><dd>${u.genkyo}</dd></div>
+       <div><dt>内見</dt><dd>${u.viewing}</dd></div>
      </dl>
      <div class="badges">
        ${u.pet?'<span class="badge pet">ペット可</span>':''}
@@ -217,7 +235,7 @@ function render(){
        <span class="badge">${u.note.split("・")[0]}</span>
      </div>
      <div class="actions">
-       <button class="detail-btn" onclick="openLb('plan_${u.key}','${u.bn} ${u.room}号室 間取り図')">🔍 詳細</button>
+       <button class="detail-btn" onclick="openLb('plan_${u.key}','${u.bn} ${u.room}号室 間取り図',null,0)">🔍 詳細</button>
        <button class="cmp-btn" onclick="toggle('${u.key}')">${sel.has(u.key)?"✓ 比較済":"＋ 比較"}</button>
        <button class="int-btn ${sent(u.key)?'sent':''}" id="int-${u.key}" onclick="sendInterest('${u.key}')">${sent(u.key)?"✓ 興味あり送信済み":"♥ この物件に興味あり"}</button>
      </div>
@@ -245,8 +263,8 @@ async function sendInterest(key){
   }
   render();
 }
-function openLb(key,cap){
-  document.getElementById("lbImg").src=src(key);
+function openLb(key,cap,intKey,intIdx){
+  document.getElementById("lbImg").src=intKey?srcInterior(intKey,intIdx):src(key);
   document.getElementById("lbCap").textContent=cap;
   document.getElementById("lb").classList.add("show");
 }

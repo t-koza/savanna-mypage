@@ -1,5 +1,5 @@
 // ===== 設定（GASデプロイ後にgasUrlを貼る） =====
-const CONFIG={gasUrl:"https://script.google.com/macros/s/AKfycbz83vj7zvFAnCSe-eaM9RNtUlyRssLrky6YTl7Dj4pDSkcstNVyX8Qtd2NuNkiEM88/exec"};
+const CONFIG={gasUrl:"https://script.google.com/macros/s/AKfycbz8y6y1XLyJekFb01RBNWSx9Nba2LD-OUYc_jtgBmMTlIpvGDUnfw1dqeHWcj2JTG4/exec"};
 
 const units=[
  {key:"rashine-nishikata-203",b:"main",bn:"ラシーネ西片",room:"203",floor:2,rent:166000,kanri:5000,plan:"1LDK",area:41.19,pet:false,move:"相談（現況居住中・2026年07月退去予定）",dep:"敷金1ヶ月/礼金2ヶ月",genkyo:"居住中",viewing:"内見応相談",hasInterior:true,note:"定借2年（更新料：新賃料1ヶ月）・都営三田線 春日 徒歩7分"},

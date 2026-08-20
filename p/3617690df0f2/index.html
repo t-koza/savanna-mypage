@@ -227,6 +227,34 @@
             opacity: .8;
         }
 
+        .warn {
+            display: flex;
+            gap: 6px;
+            margin-top: 9px;
+            padding: 7px 9px;
+            font-size: 11.5px;
+            font-weight: 700;
+            line-height: 1.5;
+            color: #b45309;
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 7px;
+        }
+
+        .warn::before {
+            content: "!";
+            flex-shrink: 0;
+            width: 14px;
+            height: 14px;
+            margin-top: 1px;
+            font-size: 10px;
+            line-height: 14px;
+            text-align: center;
+            color: #fff;
+            background: #d97706;
+            border-radius: 50%;
+        }
+
         .rows {
             padding: 4px 15px 10px;
         }
@@ -544,7 +572,7 @@
                             <path d="M12 2v20M17 5.5C17 4 15 3 12 3S7 4 7 5.9c0 4.6 10 2.3 10 7 0 2-2.2 3.1-5 3.1s-5-1.2-5-3" />
                         </svg>初期費用（概算）
                     </div>
-                    <div class="total"><span class="cap">お引越しに必要な合計</span><div class="amt"><b id="totalYen">—</b><span class="mult" id="totalMult"></span></div></div>
+                    <div class="total"><span class="cap">お引越しに必要な合計（概算）</span><div class="amt"><b id="totalYen">—</b><span class="mult" id="totalMult"></span></div></div>
                     <div class="rows" id="costRows"></div>
                     <p class="note" id="costNote"></p>
                 </section>
@@ -591,7 +619,7 @@
          *    PROPERTY_DATA     … 拡張機能が POST した JSON をそのまま
          *    INTEREST_ENDPOINT … 「興味あり／なし」の送信先URL（空なら送信しない）
          * ===================================================================== */
-        window.PROPERTY_DATA = {"title":"ブランズタワー豊洲 3409","images":["https://property-images.itandi.co.jp/public/images/01M0APVXN26DMKGBPNHXJ8PMDT.jpg","https://property-images.itandi.co.jp/public/images/01M0APVXTMDBMZKPH6ZS3JHYMK.jpg","https://property-images.itandi.co.jp/public/images/01M0APVY14SB77DV09856S84SR.jpg","https://property-images.itandi.co.jp/public/images/01M0APVY6KD5B1PZVT930555NZ.jpg","https://property-images.itandi.co.jp/public/images/01M0APVYE94NRD37Z79677VANK.jpg","https://property-images.itandi.co.jp/public/images/01M0APVYMDADYA857M57J0GBTT.jpg","https://property-images.itandi.co.jp/public/images/01M0APVYST0AN4X9B0GZ1BHSQJ.jpg","https://property-images.itandi.co.jp/public/images/01M0APVYXTVP91DQWKEGG85DRM.jpg","https://property-images.itandi.co.jp/public/images/01M0APVZ3971WTQN85KG8A3B2B.jpg","https://property-images.itandi.co.jp/public/images/01M0APVZ9HCA3T3QE2S3GNMRFB.jpg","https://property-images.itandi.co.jp/public/images/01M0APVZFAYXGB163KGEE8A988.jpg","https://property-images.itandi.co.jp/public/images/01M0APVZMBW80Q823Y53S7R9ZB.jpg","https://property-images.itandi.co.jp/public/images/01M0APVZSNDTP8M4ZRR49VNM0J.jpg","https://property-images.itandi.co.jp/public/images/01M0APW00WW9YN7VC8Z2YYGZPJ.jpg","https://property-images.itandi.co.jp/public/images/01M0APW05J1BJ5VR7WKP4KXMYZ.jpg","https://property-images.itandi.co.jp/public/images/01M0APW0BPVTY3FJW7ES2A7264.jpg","https://property-images.itandi.co.jp/public/images/01M0APW0J7JXJNYNCW6WF01YFS.jpg","https://property-images.itandi.co.jp/public/images/01M0APW0QBAP5ZQBGZCPSFEBKA.jpg","https://property-images.itandi.co.jp/public/images/01M0APW0VBGXBBT09MY32FHDJX.jpg","https://property-images.itandi.co.jp/public/images/01M0APW11NKXR0F455BJBMH6RV.jpg","https://property-images.itandi.co.jp/public/images/01M0D9A32SSZW055HVY6CGQX1T.jpg","https://property-images.itandi.co.jp/public/images/01M0D9A38PMZZXGB8JJGZF9SYR.jpg","https://property-images.itandi.co.jp/public/images/01M0D9A3C8D3RN5AEQ7AM1212S.jpg","https://property-images.itandi.co.jp/public/images/01M0D9A3GD3Z05HJPKPER7VD78.jpg","https://property-images.itandi.co.jp/public/images/01M0D9A3KX003W4TTVN50WW9JE.jpg","https://property-images.itandi.co.jp/public/images/01M0D9A3T9W1DAAQSHJ8C0NM23.jpg"],"details":[{"label":"基本情報","value":[{"label":"賃料","value":"43万円"},{"label":"管理費","value":"20,000円"},{"label":"敷金","value":"43万円"},{"label":"礼金","value":"43万円"},{"label":"所在地","value":"東京都江東区豊洲５丁目1-13 を見る 現地周辺を見る"},{"label":"交通","value":"ゆりかもめ 豊洲駅 徒歩4分 / 東京メトロ有楽町線 豊洲駅 徒歩5分"},{"label":"間取り","value":"3LDK"},{"label":"専有面積","value":"76.91㎡"},{"label":"所在階","value":"34階"},{"label":"階建","value":"地上48階, 地下1階建"},{"label":"建物種別","value":"マンション"},{"label":"主要採光面","value":"南東向き"},{"label":"現況","value":"空き"}]},{"label":"費用","value":[{"label":"保険","value":"2年間 16,550円"},{"label":"火災保険料","value":"16,550円"},{"label":"保証情報","value":"利用必須"}]},{"label":"建物情報","value":[{"label":"築年数","value":"2021年10月(築4年)"},{"label":"構造","value":"鉄筋コンクリート"}]},{"label":"契約条件","value":[{"label":"入居可能時期","value":"即入居可"},{"label":"取引態様","value":"一般媒介"},{"label":"賃貸借契約区分","value":"定期借家"},{"label":"備考","value":"■保証会社原則加入※初回保証料：賃料等の50％～（最低2万円）、月額保証料：月額引落金額×1％"}]}]};
+        window.PROPERTY_DATA = {"title": "ブランズタワー豊洲 3409", "images": ["https://property-images.itandi.co.jp/public/images/01M0APVXN26DMKGBPNHXJ8PMDT.jpg", "https://property-images.itandi.co.jp/public/images/01M0APVXTMDBMZKPH6ZS3JHYMK.jpg", "https://property-images.itandi.co.jp/public/images/01M0APVY14SB77DV09856S84SR.jpg", "https://property-images.itandi.co.jp/public/images/01M0APVY6KD5B1PZVT930555NZ.jpg", "https://property-images.itandi.co.jp/public/images/01M0APVYE94NRD37Z79677VANK.jpg", "https://property-images.itandi.co.jp/public/images/01M0APVYMDADYA857M57J0GBTT.jpg", "https://property-images.itandi.co.jp/public/images/01M0APVYST0AN4X9B0GZ1BHSQJ.jpg", "https://property-images.itandi.co.jp/public/images/01M0APVYXTVP91DQWKEGG85DRM.jpg", "https://property-images.itandi.co.jp/public/images/01M0APVZ3971WTQN85KG8A3B2B.jpg", "https://property-images.itandi.co.jp/public/images/01M0APVZ9HCA3T3QE2S3GNMRFB.jpg", "https://property-images.itandi.co.jp/public/images/01M0APVZFAYXGB163KGEE8A988.jpg", "https://property-images.itandi.co.jp/public/images/01M0APVZMBW80Q823Y53S7R9ZB.jpg", "https://property-images.itandi.co.jp/public/images/01M0APVZSNDTP8M4ZRR49VNM0J.jpg", "https://property-images.itandi.co.jp/public/images/01M0APW00WW9YN7VC8Z2YYGZPJ.jpg", "https://property-images.itandi.co.jp/public/images/01M0APW05J1BJ5VR7WKP4KXMYZ.jpg", "https://property-images.itandi.co.jp/public/images/01M0APW0BPVTY3FJW7ES2A7264.jpg", "https://property-images.itandi.co.jp/public/images/01M0APW0J7JXJNYNCW6WF01YFS.jpg", "https://property-images.itandi.co.jp/public/images/01M0APW0QBAP5ZQBGZCPSFEBKA.jpg", "https://property-images.itandi.co.jp/public/images/01M0APW0VBGXBBT09MY32FHDJX.jpg", "https://property-images.itandi.co.jp/public/images/01M0APW11NKXR0F455BJBMH6RV.jpg", "https://property-images.itandi.co.jp/public/images/01M0D9A32SSZW055HVY6CGQX1T.jpg", "https://property-images.itandi.co.jp/public/images/01M0D9A38PMZZXGB8JJGZF9SYR.jpg", "https://property-images.itandi.co.jp/public/images/01M0D9A3C8D3RN5AEQ7AM1212S.jpg", "https://property-images.itandi.co.jp/public/images/01M0D9A3GD3Z05HJPKPER7VD78.jpg", "https://property-images.itandi.co.jp/public/images/01M0D9A3KX003W4TTVN50WW9JE.jpg", "https://property-images.itandi.co.jp/public/images/01M0D9A3T9W1DAAQSHJ8C0NM23.jpg"], "details": [{"label": "基本情報", "value": [{"label": "賃料", "value": "43万円"}, {"label": "管理費", "value": "20,000円"}, {"label": "敷金", "value": "43万円"}, {"label": "礼金", "value": "43万円"}, {"label": "所在地", "value": "東京都江東区豊洲５丁目1-13 を見る 現地周辺を見る"}, {"label": "交通", "value": "ゆりかもめ 豊洲駅 徒歩4分 / 東京メトロ有楽町線 豊洲駅 徒歩5分"}, {"label": "間取り", "value": "3LDK"}, {"label": "専有面積", "value": "76.91㎡"}, {"label": "所在階", "value": "34階"}, {"label": "階建", "value": "地上48階, 地下1階建"}, {"label": "建物種別", "value": "マンション"}, {"label": "主要採光面", "value": "南東向き"}, {"label": "現況", "value": "空き"}]}, {"label": "費用", "value": [{"label": "保険", "value": "2年間 16,550円"}, {"label": "火災保険料", "value": "16,550円"}, {"label": "保証情報", "value": "利用必須"}]}, {"label": "建物情報", "value": [{"label": "築年数", "value": "2021年10月(築4年)"}, {"label": "構造", "value": "鉄筋コンクリート"}]}, {"label": "契約条件", "value": [{"label": "入居可能時期", "value": "即入居可"}, {"label": "取引態様", "value": "一般媒介"}, {"label": "賃貸借契約区分", "value": "定期借家"}, {"label": "備考", "value": "■保証会社原則加入※初回保証料：賃料等の50％～（最低2万円）、月額保証料：月額引落金額×1％"}]}]};
         window.INTEREST_ENDPOINT = "https://script.google.com/macros/s/AKfycbz83vj7zvFAnCSe-eaM9RNtUlyRssLrky6YTl7Dj4pDSkcstNVyX8Qtd2NuNkiEM88/exec";
     </script>
     <script>
@@ -882,6 +910,19 @@
         }
     });
 
+    // ★イタンジ/ATBBのデータには仲介手数料が載っていない（業者間サイトのため）。
+    //   黙って合計から落とすと、顧客には実額より数十万安く見える。必ず明示する。
+    const has = (re) => rows.some((r) => re.test(r.name));
+    if (!has(/仲介手数料/)) {
+        rows.push({ name: "仲介手数料", text: "別途", tbd: true });
+        unknown++;
+    }
+    const hoshoRow = pick(/(保証会社|家賃保証|保証情報)/);
+    if (hoshoRow && /必須|利用|あり/.test(hoshoRow.value) && !has(/保証会社/)) {
+        rows.push({ name: "保証会社利用料", text: "別途", raw: hoshoRow.value, tbd: true });
+        unknown++;
+    }
+
     const costRows = $("costRows");
     rows.forEach((r) => {
         const div = document.createElement("div");
@@ -908,6 +949,15 @@
         if (rentYen) $("totalMult").textContent = "賃料の約" + (total / rentYen).toFixed(1) + "ヶ月ぶん";
     } else {
         $("totalYen").textContent = "要確認";
+    }
+
+    // 別途費用があるときは合計の直下で警告する（見落とすと実額と大きく乖離する）
+    const tbdNames = rows.filter((r) => r.tbd).map((r) => r.name);
+    if (tbdNames.length) {
+        const warn = document.createElement("div");
+        warn.className = "warn";
+        warn.textContent = "この金額に " + tbdNames.join("・") + " は含まれていません";
+        $("totalYen").closest(".total").appendChild(warn);
     }
 
     const notes = ["表示は掲載情報からの概算です。実際の金額は契約条件・入居日により変動します。"];

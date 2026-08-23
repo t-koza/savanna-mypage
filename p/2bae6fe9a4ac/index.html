@@ -619,7 +619,7 @@
          *    PROPERTY_DATA     … 拡張機能が POST した JSON をそのまま
          *    INTEREST_ENDPOINT … 「興味あり／なし」の送信先URL（空なら送信しない）
          * ===================================================================== */
-        window.PROPERTY_DATA = {"title":"マルソ松が谷 301","images":["https://property-images.itandi.co.jp/public/images/01GRJ65NGM62RR6NQZKFA3W6D0.jpg","https://property-images.itandi.co.jp/public/images/01GRJ65P5S9GNYQTWSPFHH7QBT.jpg","https://property-images.itandi.co.jp/public/images/01GRJ65Q4B6T927CVBG1XH8VZ6.jpg"],"details":[{"label":"基本情報","value":[{"label":"賃料","value":"21.7万円"},{"label":"共益費","value":"10,000円"},{"label":"敷金","value":"21.7万円"},{"label":"礼金","value":"21.7万円"},{"label":"所在地","value":"東京都台東区松が谷4丁目5-4 を見る 現地周辺を見る"},{"label":"間取り","value":"3LDK"},{"label":"専有面積","value":"84.54㎡"},{"label":"所在階","value":"3階"},{"label":"階建","value":"10階建"},{"label":"建物種別","value":"マンション"},{"label":"主要採光面","value":"東向き"},{"label":"現況","value":"賃貸中"}]},{"label":"費用","value":[{"label":"保険","value":"加入要 2年間 24,000円"},{"label":"火災保険料","value":"24,000円"},{"label":"保証情報","value":"要保証会社加入"}]},{"label":"建物情報","value":[{"label":"築年数","value":"2002年2月(築24年)"},{"label":"構造","value":"鉄骨鉄筋コンクリート"}]},{"label":"契約条件","value":[{"label":"入居可能時期","value":"2026年9月上旬"},{"label":"取引態様","value":"代理"},{"label":"賃貸借契約区分","value":"普通借家"},{"label":"賃貸借契約期間","value":"2年間"},{"label":"更新・再契約可否","value":"更新可"},{"label":"更新料","value":"新賃料 1ヶ月"},{"label":"備考","value":"初回保証料：賃料・共益費合計の５０％ 更新料：翌年以降毎年１０，０００円 収納手数料：毎月220円"}]}]};
+        window.PROPERTY_DATA = {"title": "マルソ松が谷 301", "images": ["https://property-images.itandi.co.jp/public/images/01GRJ65NGM62RR6NQZKFA3W6D0.jpg", "https://property-images.itandi.co.jp/public/images/01GRJ65P5S9GNYQTWSPFHH7QBT.jpg", "https://property-images.itandi.co.jp/public/images/01GRJ65Q4B6T927CVBG1XH8VZ6.jpg"], "details": [{"label": "基本情報", "value": [{"label": "賃料", "value": "21.7万円"}, {"label": "共益費", "value": "10,000円"}, {"label": "敷金", "value": "21.7万円"}, {"label": "礼金", "value": "21.7万円"}, {"label": "所在地", "value": "東京都台東区松が谷4丁目5-4 を見る 現地周辺を見る"}, {"label": "間取り", "value": "3LDK"}, {"label": "専有面積", "value": "84.54㎡"}, {"label": "所在階", "value": "3階"}, {"label": "階建", "value": "10階建"}, {"label": "建物種別", "value": "マンション"}, {"label": "主要採光面", "value": "東向き"}, {"label": "現況", "value": "賃貸中"}]}, {"label": "費用", "value": [{"label": "保険", "value": "加入要 2年間 24,000円"}, {"label": "火災保険料", "value": "24,000円"}, {"label": "保証情報", "value": "要保証会社加入"}]}, {"label": "建物情報", "value": [{"label": "築年数", "value": "2002年2月(築24年)"}, {"label": "構造", "value": "鉄骨鉄筋コンクリート"}]}, {"label": "契約条件", "value": [{"label": "入居可能時期", "value": "2026年9月上旬"}, {"label": "取引態様", "value": "代理"}, {"label": "賃貸借契約区分", "value": "普通借家"}, {"label": "賃貸借契約期間", "value": "2年間"}, {"label": "更新・再契約可否", "value": "更新可"}, {"label": "更新料", "value": "新賃料 1ヶ月"}, {"label": "備考", "value": "初回保証料：賃料・共益費合計の５０％ 更新料：翌年以降毎年１０，０００円 収納手数料：毎月220円"}]}]};
         window.INTEREST_ENDPOINT = "https://script.google.com/macros/s/AKfycbz83vj7zvFAnCSe-eaM9RNtUlyRssLrky6YTl7Dj4pDSkcstNVyX8Qtd2NuNkiEM88/exec";
     </script>
     <script>
@@ -912,15 +912,45 @@
 
     // ★イタンジ/ATBBのデータには仲介手数料が載っていない（業者間サイトのため）。
     //   黙って合計から落とすと、顧客には実額より数十万安く見える。必ず明示する。
+    // ----------------------------------------------------------------
+    //  掲載データに無い費用を自社の規定料率で補う
+    //  ★イタンジ/ATBBは業者間サイトのため、顧客に請求する仲介手数料が載っていない。
+    //    黙って合計から落とすと実額より数十万安く見えるので、規定料率で補う。
+    //    料率を変えるときはこの2行だけ直せばよい。
+    // ----------------------------------------------------------------
+    const RATE_CHUKAI = 1.1;   // 仲介手数料 = 賃料の1.1ヶ月（1ヶ月＋税）
+    const RATE_HOSHO = 0.5;    // 保証会社初回保証料 = 賃料＋管理費の0.5ヶ月
+
     const has = (re) => rows.some((r) => re.test(r.name));
+    const estimated = [];
+
     if (!has(/仲介手数料/)) {
-        rows.push({ name: "仲介手数料", text: "別途", tbd: true });
-        unknown++;
+        if (rentYen) {
+            const v = Math.round(rentYen * RATE_CHUKAI);
+            rows.push({ name: "仲介手数料", text: yen(v), raw: "賃料の1.1ヶ月（税込）", amount: v });
+            total += v;
+            estimated.push("仲介手数料");
+        } else {
+            rows.push({ name: "仲介手数料", text: "別途", tbd: true });
+            unknown++;
+        }
     }
+
     const hoshoRow = pick(/(保証会社|家賃保証|保証情報)/);
-    if (hoshoRow && /必須|利用|あり/.test(hoshoRow.value) && !has(/保証会社/)) {
-        rows.push({ name: "保証会社利用料", text: "別途", raw: hoshoRow.value, tbd: true });
-        unknown++;
+    if (!has(/保証会社/)) {
+        if (MONTHLY) {
+            const v = Math.round(MONTHLY * RATE_HOSHO);
+            rows.push({
+                name: "保証会社初回保証料", text: yen(v),
+                raw: "賃料等の50%" + (hoshoRow ? "／" + hoshoRow.value.split("\n")[0] : ""),
+                amount: v
+            });
+            total += v;
+            estimated.push("保証会社初回保証料");
+        } else if (hoshoRow) {
+            rows.push({ name: "保証会社初回保証料", text: "別途", raw: hoshoRow.value, tbd: true });
+            unknown++;
+        }
     }
 
     const costRows = $("costRows");
@@ -961,6 +991,9 @@
     }
 
     const notes = ["表示は掲載情報からの概算です。実際の金額は契約条件・入居日により変動します。"];
+    if (estimated.length) {
+        notes.unshift(estimated.join("・") + "は当社規定の料率による概算です。");
+    }
     if (unknown) notes.unshift(`「要確認」の${unknown}項目は金額が確定していないため合計に含んでいません。`);
     if (!rows.length) notes.length = 0, notes.push("費用情報を取得できませんでした。");
     $("costNote").textContent = notes.join(" ");

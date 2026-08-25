@@ -619,7 +619,7 @@
          *    PROPERTY_DATA     … 拡張機能が POST した JSON をそのまま
          *    INTEREST_ENDPOINT … 「興味あり／なし」の送信先URL（空なら送信しない）
          * ===================================================================== */
-        window.PROPERTY_DATA = {"title":"ダイヤパレス猿江恩賜公園 613","images":["https://property-images.itandi.co.jp/public/images/01M0Q9PQ35HXQ9SB956P5EMMAE.jpg"],"details":[{"label":"基本情報","value":[{"label":"賃料","value":"25万円"},{"label":"敷金","value":"1ヶ月"},{"label":"礼金","value":"1ヶ月"},{"label":"所在地","value":"東京都江東区猿江2丁目16-23 を見る 現地周辺を見る"},{"label":"交通","value":"東京メトロ半蔵門線 住吉駅 徒歩6分 / JR中央・総武線 錦糸町駅 徒歩22分 / JR中央・総武線 亀戸駅 徒歩29分"},{"label":"間取り","value":"3LDK"},{"label":"専有面積","value":"79.05㎡"},{"label":"所在階","value":"6階"},{"label":"階建","value":"15階建"},{"label":"建物種別","value":"マンション"},{"label":"主要採光面","value":"西向き"}]},{"label":"費用","value":[{"label":"保険","value":"2年間 22,000円"}]},{"label":"建物情報","value":[{"label":"築年数","value":"1988年7月(築38年)"},{"label":"構造","value":"鉄筋コンクリート"},{"label":"総戸数","value":"395戸"}]},{"label":"契約条件","value":[{"label":"入居可能時期","value":"2026年9月下旬"},{"label":"取引態様","value":"代理"},{"label":"賃貸借契約区分","value":"定期借家"},{"label":"更新料","value":"1ヶ月"},{"label":"備考","value":"エポスカード【部屋】初回保証料：賃料等の１００％（最低保証料３００００円）月次保証料：賃料等の２％"}]}]};
+        window.PROPERTY_DATA = {"title": "ダイヤパレス猿江恩賜公園 613", "images": ["https://property-images.itandi.co.jp/public/images/01M0Q9PQ35HXQ9SB956P5EMMAE.jpg"], "details": [{"label": "基本情報", "value": [{"label": "賃料", "value": "25万円"}, {"label": "敷金", "value": "1ヶ月"}, {"label": "礼金", "value": "1ヶ月"}, {"label": "所在地", "value": "東京都江東区猿江2丁目16-23 を見る 現地周辺を見る"}, {"label": "交通", "value": "東京メトロ半蔵門線 住吉駅 徒歩6分 / JR中央・総武線 錦糸町駅 徒歩22分 / JR中央・総武線 亀戸駅 徒歩29分"}, {"label": "間取り", "value": "3LDK"}, {"label": "専有面積", "value": "79.05㎡"}, {"label": "所在階", "value": "6階"}, {"label": "階建", "value": "15階建"}, {"label": "建物種別", "value": "マンション"}, {"label": "主要採光面", "value": "西向き"}]}, {"label": "費用", "value": [{"label": "保険", "value": "2年間 22,000円"}]}, {"label": "建物情報", "value": [{"label": "築年数", "value": "1988年7月(築38年)"}, {"label": "構造", "value": "鉄筋コンクリート"}, {"label": "総戸数", "value": "395戸"}]}, {"label": "契約条件", "value": [{"label": "入居可能時期", "value": "2026年9月下旬"}, {"label": "取引態様", "value": "代理"}, {"label": "賃貸借契約区分", "value": "定期借家"}, {"label": "更新料", "value": "1ヶ月"}, {"label": "備考", "value": "エポスカード【部屋】初回保証料：賃料等の１００％（最低保証料３００００円）月次保証料：賃料等の２％"}]}]};
         window.INTEREST_ENDPOINT = "https://script.google.com/macros/s/AKfycbz83vj7zvFAnCSe-eaM9RNtUlyRssLrky6YTl7Dj4pDSkcstNVyX8Qtd2NuNkiEM88/exec";
     </script>
     <script>
@@ -1066,7 +1066,9 @@
         const q = new URLSearchParams({
             action: "interest",
             choice: choice,                            // yes / no
-            c: CUSTOMER,
+            // ★顧客IDのキーは cid。'c' は Google Apps Script の予約パラメータで、
+            //   数値以外を渡すとスクリプトに届く前に HTTP 400 で弾かれる。
+            cid: CUSTOMER,
             building: DATA.title || "",
             room: "",
             rent: String(MONTHLY || rentYen || ""),

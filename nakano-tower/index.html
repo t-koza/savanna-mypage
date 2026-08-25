@@ -231,7 +231,7 @@ async function sendInterest(room){
   const btn=document.getElementById("int-"+room);
   btn.disabled=true;btn.textContent="送信中…";
   try{
-    const q=new URLSearchParams({action:"interest",c:CID,building:u.bn,room:u.room,rent:u.total,plan:u.plan,page:"nakano-tower"});
+    const q=new URLSearchParams({action:"interest",cid:CID,building:u.bn,room:u.room,rent:u.total,plan:u.plan,page:"nakano-tower"});
     await fetch(GAS_URL+"?"+q.toString());
     try{localStorage.setItem("int_"+CID+"_"+room,"1");}catch(e){}
     btn.className="int-btn sent";btn.textContent="✓ 興味あり送信済み";btn.disabled=false;

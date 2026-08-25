@@ -1066,7 +1066,9 @@
         const q = new URLSearchParams({
             action: "interest",
             choice: choice,                            // yes / no
-            c: CUSTOMER,
+            // ★顧客IDのキーは cid。'c' は Google Apps Script の予約パラメータで、
+            //   数値以外を渡すとスクリプトに届く前に HTTP 400 で弾かれる。
+            cid: CUSTOMER,
             building: DATA.title || "",
             room: "",
             rent: String(MONTHLY || rentYen || ""),

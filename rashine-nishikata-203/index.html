@@ -261,7 +261,7 @@ async function sendInterest(key){
   const btn=document.getElementById("int-"+key);
   btn.disabled=true;btn.textContent="送信中…";
   try{
-    const q=new URLSearchParams({action:"interest",c:CID,building:u.bn,room:u.room,rent:u.total,plan:u.plan,page:"kachidoki-shirokane"});
+    const q=new URLSearchParams({action:"interest",cid:CID,building:u.bn,room:u.room,rent:u.total,plan:u.plan,page:"rashine-nishikata-203"});
     await fetch(GAS_URL+"?"+q.toString());
     try{localStorage.setItem("int_"+CID+"_"+key,"1");}catch(e){}
     btn.className="int-btn sent";btn.textContent="✓ 興味あり送信済み";btn.disabled=false;

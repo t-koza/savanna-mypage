@@ -1043,6 +1043,26 @@
     const PAGE_ID = QS.get("id") || location.pathname.split("/").filter(Boolean).pop() || "atbb";
     const STORE_KEY = `interest:${PAGE_ID}:${CUSTOMER}`;
 
+    // 訪問者ID: ブラウザごとに一度だけ発行して localStorage に保持する匿名ID。
+    // ?cid= が付かずに開かれると顧客IDは "guest" になり誰だか分からなくなるため、
+    // 同一ブラウザからのアクションを紐づけられるようにする。
+    // 同一オリジンなので、複数の物件ページをまたいで同じIDになる
+    // （＝同じ人が何件見て、どれに反応したかが追える）。個人情報は含まない。
+    const VISITOR = (() => {
+        const K = "savanna:visitorId";
+        try {
+            let v = localStorage.getItem(K);
+            if (!v) {
+                v = (crypto.randomUUID ? crypto.randomUUID().replace(/-/g, "") : Math.random().toString(36).slice(2))
+                    .slice(0, 12);
+                localStorage.setItem(K, v);
+            }
+            return v;
+        } catch (_) {
+            return "nostore";   // プライベートモード等で保存できない場合
+        }
+    })();
+
     const btnYes = $("btnYes"), btnNo = $("btnNo"), actions = $("actions"), thanks = $("thanks");
 
     const showThanks = (choice) => {
@@ -1069,6 +1089,7 @@
             // ★顧客IDのキーは cid。'c' は Google Apps Script の予約パラメータで、
             //   数値以外を渡すとスクリプトに届く前に HTTP 400 で弾かれる。
             cid: CUSTOMER,
+            vid: VISITOR,                              // ブラウザごとの匿名ID
             building: DATA.title || "",
             room: "",
             rent: String(MONTHLY || rentYen || ""),

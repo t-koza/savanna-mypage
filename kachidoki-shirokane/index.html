@@ -254,7 +254,12 @@ async function sendInterest(key){
   const btn=document.getElementById("int-"+key);
   btn.disabled=true;btn.textContent="送信中…";
   try{
-    const q=new URLSearchParams({action:"interest",cid:CID,building:u.bn,room:u.room,rent:u.total,plan:u.plan,page:"kachidoki-shirokane"});
+  // 訪問者ID: ブラウザごとの匿名ID。?cid= が無いと顧客IDが guest になり
+  // 誰だか分からなくなるため、同一ブラウザの操作を紐づけられるようにする。
+  const VISITOR=(()=>{const K="savanna:visitorId";try{let v=localStorage.getItem(K);
+    if(!v){v=(crypto.randomUUID?crypto.randomUUID().replace(/-/g,""):Math.random().toString(36).slice(2)).slice(0,12);
+    localStorage.setItem(K,v);}return v;}catch(_){return "nostore";}})();
+    const q=new URLSearchParams({action:"interest",cid:CID,vid:VISITOR,building:u.bn,room:u.room,rent:u.total,plan:u.plan,page:"kachidoki-shirokane"});
     await fetch(GAS_URL+"?"+q.toString());
     try{localStorage.setItem("int_"+CID+"_"+key,"1");}catch(e){}
     btn.className="int-btn sent";btn.textContent="✓ 興味あり送信済み";btn.disabled=false;
